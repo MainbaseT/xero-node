@@ -59,6 +59,7 @@ export * from '././importSummaryAccounts';
 export * from '././importSummaryObject';
 export * from '././importSummaryOrganisation';
 export * from '././invoice';
+export * from '././invoiceAddress';
 export * from '././invoiceReminder';
 export * from '././invoiceReminders';
 export * from '././invoices';
@@ -83,6 +84,7 @@ export * from '././organisation';
 export * from '././organisations';
 export * from '././overpayment';
 export * from '././overpayments';
+export * from '././pagination';
 export * from '././payment';
 export * from '././paymentDelete';
 export * from '././paymentService';
@@ -118,6 +120,7 @@ export * from '././rowType';
 export * from '././salesTrackingCategory';
 export * from '././schedule';
 export * from '././setup';
+export * from '././taxBreakdownComponent';
 export * from '././taxComponent';
 export * from '././taxRate';
 export * from '././taxRates';
@@ -193,6 +196,7 @@ import { ImportSummaryAccounts } from '././importSummaryAccounts';
 import { ImportSummaryObject } from '././importSummaryObject';
 import { ImportSummaryOrganisation } from '././importSummaryOrganisation';
 import { Invoice } from '././invoice';
+import { InvoiceAddress } from '././invoiceAddress';
 import { InvoiceReminder } from '././invoiceReminder';
 import { InvoiceReminders } from '././invoiceReminders';
 import { Invoices } from '././invoices';
@@ -217,6 +221,7 @@ import { Organisation } from '././organisation';
 import { Organisations } from '././organisations';
 import { Overpayment } from '././overpayment';
 import { Overpayments } from '././overpayments';
+import { Pagination } from '././pagination';
 import { Payment } from '././payment';
 import { PaymentDelete } from '././paymentDelete';
 import { PaymentService } from '././paymentService';
@@ -252,6 +257,7 @@ import { RowType } from '././rowType';
 import { SalesTrackingCategory } from '././salesTrackingCategory';
 import { Schedule } from '././schedule';
 import { Setup } from '././setup';
+import { TaxBreakdownComponent } from '././taxBreakdownComponent';
 import { TaxComponent } from '././taxComponent';
 import { TaxRate } from '././taxRate';
 import { TaxRates } from '././taxRates';
@@ -265,6 +271,11 @@ import { TrackingOptions } from '././trackingOptions';
 import { User } from '././user';
 import { Users } from '././users';
 import { ValidationError } from '././validationError';
+
+import * as fs from 'fs';
+import { Readable } from "stream";
+
+export type RequestFile = Buffer | fs.ReadStream | Readable;
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -306,8 +317,10 @@ let enumsMap: {[index: string]: any} = {
         "ExternalLink.LinkTypeEnum": ExternalLink.LinkTypeEnum,
         "Invoice.TypeEnum": Invoice.TypeEnum,
         "Invoice.StatusEnum": Invoice.StatusEnum,
+        "InvoiceAddress.InvoiceAddressTypeEnum": InvoiceAddress.InvoiceAddressTypeEnum,
         "Journal.SourceTypeEnum": Journal.SourceTypeEnum,
         "LineAmountTypes": LineAmountTypes,
+        "LineItem.TaxabilityEnum": LineItem.TaxabilityEnum,
         "LinkedTransaction.StatusEnum": LinkedTransaction.StatusEnum,
         "LinkedTransaction.TypeEnum": LinkedTransaction.TypeEnum,
         "LinkedTransaction.SourceTransactionTypeCodeEnum": LinkedTransaction.SourceTransactionTypeCodeEnum,
@@ -337,6 +350,7 @@ let enumsMap: {[index: string]: any} = {
         "RowType": RowType,
         "Schedule.UnitEnum": Schedule.UnitEnum,
         "Schedule.DueDateTypeEnum": Schedule.DueDateTypeEnum,
+        "TaxBreakdownComponent.TypeEnum": TaxBreakdownComponent.TypeEnum,
         "TaxRate.StatusEnum": TaxRate.StatusEnum,
         "TaxRate.ReportTaxTypeEnum": TaxRate.ReportTaxTypeEnum,
         "TaxType": TaxType,
@@ -406,6 +420,7 @@ let typeMap: {[index: string]: any} = {
     "ImportSummaryObject": ImportSummaryObject,
     "ImportSummaryOrganisation": ImportSummaryOrganisation,
     "Invoice": Invoice,
+    "InvoiceAddress": InvoiceAddress,
     "InvoiceReminder": InvoiceReminder,
     "InvoiceReminders": InvoiceReminders,
     "Invoices": Invoices,
@@ -429,6 +444,7 @@ let typeMap: {[index: string]: any} = {
     "Organisations": Organisations,
     "Overpayment": Overpayment,
     "Overpayments": Overpayments,
+    "Pagination": Pagination,
     "Payment": Payment,
     "PaymentDelete": PaymentDelete,
     "PaymentService": PaymentService,
@@ -460,6 +476,7 @@ let typeMap: {[index: string]: any} = {
     "SalesTrackingCategory": SalesTrackingCategory,
     "Schedule": Schedule,
     "Setup": Setup,
+    "TaxBreakdownComponent": TaxBreakdownComponent,
     "TaxComponent": TaxComponent,
     "TaxRate": TaxRate,
     "TaxRates": TaxRates,

@@ -1048,7 +1048,7 @@ ul.nav-tabs {
 };
       defs["Deduction"] = {
   "title" : "",
-  "required" : [ "calculationType", "deductionCategory", "deductionName", "liabilityAccountId" ],
+  "required" : [ "deductionCategory", "deductionName", "liabilityAccountId" ],
   "type" : "object",
   "properties" : {
     "deductionId" : {
@@ -1422,7 +1422,7 @@ ul.nav-tabs {
 };
       defs["Employee"] = {
   "title" : "",
-  "required" : [ "Address", "DateOfBirth", "FirstName", "LastName" ],
+  "required" : [ "address", "dateOfBirth", "firstName", "lastName" ],
   "type" : "object",
   "properties" : {
     "employeeID" : {
@@ -1507,6 +1507,18 @@ ul.nav-tabs {
       "type" : "string",
       "description" : "Employee's job title",
       "example" : "General Manager"
+    },
+    "engagementType" : {
+      "type" : "string",
+      "description" : "Engagement type of the employee",
+      "example" : "Permanent"
+    },
+    "fixedTermEndDate" : {
+      "type" : "string",
+      "description" : "End date for an employee with a fixed-term engagement type",
+      "format" : "date",
+      "example" : "2020-01-19",
+      "x-is-date" : true
     }
   },
   "description" : ""
@@ -1690,6 +1702,18 @@ ul.nav-tabs {
       "format" : "double",
       "example" : 10.5,
       "x-is-money" : true
+    },
+    "SickLeaveScheduleOfAccrual" : {
+      "type" : "string",
+      "description" : "Set Schedule of Accrual Type for Sick Leave",
+      "example" : "OnAnniversaryDate"
+    },
+    "SickLeaveAnniversaryDate" : {
+      "type" : "string",
+      "description" : "If Sick Leave Schedule of Accrual is \"OnAnniversaryDate\", this is the date when entitled to Sick Leave",
+      "format" : "date",
+      "example" : "2020-01-19",
+      "x-is-date" : true
     }
   },
   "description" : ""
@@ -1767,6 +1791,13 @@ ul.nav-tabs {
       "description" : "Specific to Annual Leave. Annual leave balance in dollars",
       "format" : "double",
       "x-is-money" : true
+    },
+    "scheduleOfAccrualDate" : {
+      "type" : "string",
+      "description" : "The date when an employee becomes entitled to their accrual.",
+      "format" : "date",
+      "example" : "2020-01-19",
+      "x-is-date" : true
     }
   },
   "description" : ""
@@ -2286,6 +2317,96 @@ ul.nav-tabs {
   },
   "description" : ""
 };
+      defs["EmployeeWorkingPattern"] = {
+  "title" : "",
+  "required" : [ "effectiveFrom", "payeeWorkingPatternID" ],
+  "type" : "object",
+  "properties" : {
+    "payeeWorkingPatternID" : {
+      "type" : "string",
+      "description" : "The Xero identifier for for Employee working pattern",
+      "format" : "uuid"
+    },
+    "effectiveFrom" : {
+      "type" : "string",
+      "description" : "The effective date of the corresponding salary and wages",
+      "format" : "date",
+      "x-is-date" : true
+    }
+  },
+  "description" : ""
+};
+      defs["EmployeeWorkingPatternWithWorkingWeeks"] = {
+  "title" : "",
+  "required" : [ "effectiveFrom", "payeeWorkingPatternID" ],
+  "type" : "object",
+  "properties" : {
+    "payeeWorkingPatternID" : {
+      "type" : "string",
+      "description" : "The Xero identifier for for Employee working pattern",
+      "format" : "uuid"
+    },
+    "effectiveFrom" : {
+      "type" : "string",
+      "description" : "The effective date of the corresponding salary and wages",
+      "format" : "date",
+      "x-is-date" : true
+    },
+    "workingWeeks" : {
+      "$ref" : "#/components/schemas/WorkingWeeks"
+    }
+  },
+  "description" : ""
+};
+      defs["EmployeeWorkingPatternWithWorkingWeeksObject"] = {
+  "title" : "",
+  "type" : "object",
+  "properties" : {
+    "pagination" : {
+      "$ref" : "#/components/schemas/Pagination"
+    },
+    "problem" : {
+      "$ref" : "#/components/schemas/Problem"
+    },
+    "payeeWorkingPattern" : {
+      "$ref" : "#/components/schemas/EmployeeWorkingPatternWithWorkingWeeks"
+    }
+  },
+  "description" : ""
+};
+      defs["EmployeeWorkingPatternWithWorkingWeeksRequest"] = {
+  "title" : "",
+  "required" : [ "effectiveFrom", "workingWeeks" ],
+  "type" : "object",
+  "properties" : {
+    "effectiveFrom" : {
+      "type" : "string",
+      "description" : "The effective date of the corresponding salary and wages",
+      "format" : "date",
+      "x-is-date" : true
+    },
+    "workingWeeks" : {
+      "$ref" : "#/components/schemas/WorkingWeeks"
+    }
+  },
+  "description" : ""
+};
+      defs["EmployeeWorkingPatternsObject"] = {
+  "title" : "",
+  "type" : "object",
+  "properties" : {
+    "pagination" : {
+      "$ref" : "#/components/schemas/Pagination"
+    },
+    "problem" : {
+      "$ref" : "#/components/schemas/Problem"
+    },
+    "payeeWorkingPatterns" : {
+      "$ref" : "#/components/schemas/EmployeeWorkingPatterns"
+    }
+  },
+  "description" : ""
+};
       defs["Employees"] = {
   "title" : "",
   "type" : "object",
@@ -2307,7 +2428,7 @@ ul.nav-tabs {
 };
       defs["Employment"] = {
   "title" : "",
-  "required" : [ "PayrollCalendarID", "StartDate" ],
+  "required" : [ "engagementType", "payrollCalendarID", "startDate" ],
   "type" : "object",
   "properties" : {
     "payrollCalendarID" : {
@@ -2324,6 +2445,18 @@ ul.nav-tabs {
       "type" : "string",
       "description" : "Start date of the employment (YYYY-MM-DD)",
       "format" : "date",
+      "x-is-date" : true
+    },
+    "engagementType" : {
+      "type" : "string",
+      "description" : "Engagement type of the employee",
+      "example" : "Permanent"
+    },
+    "fixedTermEndDate" : {
+      "type" : "string",
+      "description" : "End date for an employee with a fixed-term engagement type",
+      "format" : "date",
+      "example" : "2020-01-19",
       "x-is-date" : true
     }
   },
@@ -3234,6 +3367,11 @@ ul.nav-tabs {
       "type" : "string",
       "description" : "The type of the payment of the corresponding salary and wages",
       "enum" : [ "Salary", "Hourly" ]
+    },
+    "workPatternType" : {
+      "type" : "string",
+      "description" : "The type of the Working Pattern of the corresponding salary and wages",
+      "enum" : [ "DaysAndHours", "RegularWeek" ]
     }
   },
   "description" : ""
@@ -3760,6 +3898,56 @@ ul.nav-tabs {
   },
   "description" : ""
 };
+      defs["WorkingWeek"] = {
+  "title" : "",
+  "required" : [ "friday", "monday", "saturday", "sunday", "thursday", "tuesday", "wednesday" ],
+  "type" : "object",
+  "properties" : {
+    "monday" : {
+      "type" : "number",
+      "description" : "The number of hours worked on a Monday",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "tuesday" : {
+      "type" : "number",
+      "description" : "The number of hours worked on a Tuesday",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "wednesday" : {
+      "type" : "number",
+      "description" : "The number of hours worked on a Wednesday",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "thursday" : {
+      "type" : "number",
+      "description" : "The number of hours worked on a Thursday",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "friday" : {
+      "type" : "number",
+      "description" : "The number of hours worked on a Friday",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "saturday" : {
+      "type" : "number",
+      "description" : "The number of hours worked on a Saturday",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "sunday" : {
+      "type" : "number",
+      "description" : "The number of hours worked on a Sunday",
+      "format" : "double",
+      "x-is-money" : true
+    }
+  },
+  "description" : ""
+};
       
       var errs = {};
       
@@ -3844,7 +4032,7 @@ ul.nav-tabs {
           <nav id="scrollingNav">
             <ul class="sidenav nav nav-list">
               <li class="nav-header" data-group="PayrollNz"><strong>SDK: </strong><span id='sdk-name'></span></li>
-              <li class="nav-header" data-group="PayrollNz"><strong>VSN: </strong>5.1.0</li>
+              <li class="nav-header" data-group="PayrollNz"><strong>VSN: </strong>9.3.0</li>
               <li class="nav-header" data-group="PayrollNz"><a href="#api-PayrollNz">Methods</a></li>
               <li data-group="PayrollNz" data-name="approveTimesheet" class="">
                 <a href="#api-PayrollNz-approveTimesheet">approveTimesheet</a>
@@ -3878,6 +4066,9 @@ ul.nav-tabs {
               </li>
               <li data-group="PayrollNz" data-name="createEmployeeSalaryAndWage" class="">
                 <a href="#api-PayrollNz-createEmployeeSalaryAndWage">createEmployeeSalaryAndWage</a>
+              </li>
+              <li data-group="PayrollNz" data-name="createEmployeeWorkingPattern" class="">
+                <a href="#api-PayrollNz-createEmployeeWorkingPattern">createEmployeeWorkingPattern</a>
               </li>
               <li data-group="PayrollNz" data-name="createEmployment" class="">
                 <a href="#api-PayrollNz-createEmployment">createEmployment</a>
@@ -3914,6 +4105,9 @@ ul.nav-tabs {
               </li>
               <li data-group="PayrollNz" data-name="deleteEmployeeSalaryAndWage" class="">
                 <a href="#api-PayrollNz-deleteEmployeeSalaryAndWage">deleteEmployeeSalaryAndWage</a>
+              </li>
+              <li data-group="PayrollNz" data-name="deleteEmployeeWorkingPattern" class="">
+                <a href="#api-PayrollNz-deleteEmployeeWorkingPattern">deleteEmployeeWorkingPattern</a>
               </li>
               <li data-group="PayrollNz" data-name="deleteTimesheet" class="">
                 <a href="#api-PayrollNz-deleteTimesheet">deleteTimesheet</a>
@@ -3965,6 +4159,12 @@ ul.nav-tabs {
               </li>
               <li data-group="PayrollNz" data-name="getEmployeeTax" class="">
                 <a href="#api-PayrollNz-getEmployeeTax">getEmployeeTax</a>
+              </li>
+              <li data-group="PayrollNz" data-name="getEmployeeWorkingPattern" class="">
+                <a href="#api-PayrollNz-getEmployeeWorkingPattern">getEmployeeWorkingPattern</a>
+              </li>
+              <li data-group="PayrollNz" data-name="getEmployeeWorkingPatterns" class="">
+                <a href="#api-PayrollNz-getEmployeeWorkingPatterns">getEmployeeWorkingPatterns</a>
               </li>
               <li data-group="PayrollNz" data-name="getEmployees" class="">
                 <a href="#api-PayrollNz-getEmployees">getEmployees</a>
@@ -4334,7 +4534,11 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/Deduction"
       },
-      "example" : "{ \"deductionName\": \"My new deduction\", \"deductionCategory\": \"NzOther\", \"liabilityAccountId\": \"568f2e9a-0870-46cc-8678-f83f132ed4e3\" }"
+      "example" : {
+        "deductionName" : "My new deduction",
+        "deductionCategory" : "NzOther",
+        "liabilityAccountId" : "568f2e9a-0870-46cc-8678-f83f132ed4e3"
+      }
     }
   },
   "required" : true
@@ -4476,7 +4680,13 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/EarningsRate"
       },
-      "example" : "{ \"name\": \"My Earnings Rate\", \"earningsType\": \"RegularEarnings\", \"rateType\": \"RatePerUnit\", \"typeOfUnits\": \"hours\", \"expenseAccountID\": \"e4eb36f6-97e3-4427-a394-dd4e1b355c2e\" }"
+      "example" : {
+        "name" : "My Earnings Rate",
+        "earningsType" : "RegularEarnings",
+        "rateType" : "RatePerUnit",
+        "typeOfUnits" : "hours",
+        "expenseAccountID" : "e4eb36f6-97e3-4427-a394-dd4e1b355c2e"
+      }
     }
   },
   "required" : true
@@ -4627,7 +4837,20 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/Employee"
       },
-      "example" : "{ \"title\": \"Mr\", \"firstName\": \"Mike\", \"lastName\": \"Johntzxzpxhmkgson\", \"dateOfBirth\": \"2000-01-01\", \"address\": { \"addressLine1\": \"101 Green St\", \"city\": \"San Francisco\", \"postCode\": \"4351\", \"countryName\": \"United Kingdom\" }, \"email\": \"83139@starkindustries.com\", \"gender\": \"M\" }"
+      "example" : {
+        "title" : "Mr",
+        "firstName" : "Mike",
+        "lastName" : "Johntzxzpxhmkgson",
+        "dateOfBirth" : "2000-01-01",
+        "address" : {
+          "addressLine1" : "101 Green St",
+          "city" : "San Francisco",
+          "postCode" : "4351",
+          "countryName" : "United Kingdom"
+        },
+        "email" : "83139@starkindustries.com",
+        "gender" : "M"
+      }
     }
   },
   "required" : true
@@ -4649,7 +4872,7 @@ This allows you to safely retry requests without the risk of duplicate processin
                   <p class="marked"></p>
                   <p></p>
                   <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/PayTemplates/earnings</span></code></pre>
+                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/PayTemplates/Earnings</span></code></pre>
                   <p>
                   <h3>Usage and SDK Samples</h3>
                   </p>
@@ -4808,7 +5031,12 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/EarningsTemplate"
       },
-      "example" : "{ \"ratePerUnit\": 20, \"numberOfUnits\": 8, \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"name\": \"My New One\" }"
+      "example" : {
+        "ratePerUnit" : 20,
+        "numberOfUnits" : 8,
+        "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+        "name" : "My New One"
+      }
     }
   },
   "required" : true
@@ -4852,7 +5080,9 @@ const endDate = '2020-10-30'
 const employeeLeave: EmployeeLeave = { 
   leaveTypeID: "00000000-0000-0000-0000-000000000000",
   startDate: startDate,
-  endDate: endDate
+  endDate: endDate,
+  numberOfUnits: numberOfUnits,
+  numberOfUnitsTaken: numberOfUnitsTaken
 }; 
 
 try {
@@ -4986,7 +5216,12 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/EmployeeLeave"
       },
-      "example" : "{ \"leaveTypeID\": \"b0b1b79e-2a25-46c2-ad08-ca25ef48d7e4\", \"description\": \"Creating a Description\", \"startDate\": \"2020-04-24\", \"endDate\": \"2020-04-26\" }"
+      "example" : {
+        "leaveTypeID" : "b0b1b79e-2a25-46c2-ad08-ca25ef48d7e4",
+        "description" : "Creating a Description",
+        "startDate" : "2020-04-24",
+        "endDate" : "2020-04-26"
+      }
     }
   },
   "required" : true
@@ -5008,7 +5243,7 @@ This allows you to safely retry requests without the risk of duplicate processin
                   <p class="marked"></p>
                   <p></p>
                   <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/leaveSetup</span></code></pre>
+                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/LeaveSetup</span></code></pre>
                   <p>
                   <h3>Usage and SDK Samples</h3>
                   </p>
@@ -5031,7 +5266,12 @@ const employeeLeaveSetup: EmployeeLeaveSetup = {
   annualLeaveOpeningBalance: 25.89,
   sickLeaveHoursToAccrueAnnually: 100.0,
   sickLeaveMaximumHoursToAccrue: 200.0,
-  sickLeaveOpeningBalance: 10.5
+  sickLeaveOpeningBalance: 10.5,
+  sickLeaveToAccrueAnnually: 100.0,
+  sickLeaveMaximumToAccrue: 200.0,
+  sickLeaveScheduleOfAccrual: "",
+  sickLeaveAnniversaryDate: ,
+  annualLeaveAnniversaryDate: 
 }; 
 
 try {
@@ -5165,7 +5405,16 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/EmployeeLeaveSetup"
       },
-      "example" : "{ \"holidayPayOpeningBalance\": 10, \"annualLeaveOpeningBalance\": 100, \"sickLeaveHoursToAccrueAnnually\": 20, \"sickLeaveOpeningBalance\": 10 }"
+      "example" : {
+        "holidayPayOpeningBalance" : 10,
+        "annualLeaveOpeningBalance" : 100,
+        "sickLeaveHoursToAccrueAnnually" : 20,
+        "sickLeaveToAccrueAnnually" : 20,
+        "sickLeaveOpeningBalance" : 10,
+        "sickLeaveScheduleOfAccrual" : "OnAnniversaryDate",
+        "sickLeaveAnniversaryDate" : "2023-12-31",
+        "annualLeaveAnniversaryDate" : "2023-12-31"
+      }
     }
   },
   "required" : true
@@ -5207,7 +5456,8 @@ const idempotencyKey = 'KEY_VALUE';
 const employeeLeaveType: EmployeeLeaveType = { 
   leaveTypeID: "00000000-0000-0000-0000-000000000000",
   scheduleOfAccrual: EmployeeLeaveType.ScheduleOfAccrualEnum.PercentageOfGrossEarnings,
-  openingBalance: 5.25
+  openingBalance: 5.25,
+  scheduleOfAccrualDate: 
 }; 
 
 try {
@@ -5341,7 +5591,17 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/EmployeeLeaveType"
       },
-      "example" : "{ \"leaveTypeID\": \"35da97ae-05b9-427f-9a98-69157ba42cec\", \"scheduleOfAccrual\": \"AnnuallyAfter6Months\", \"hoursAccruedAnnually\": 10, \"maximumToAccrue\": 80, \"openingBalance\": 100, \"rateAccruedHourly\": 3.5 }"
+      "example" : {
+        "leaveTypeID" : "35da97ae-05b9-427f-9a98-69157ba42cec",
+        "scheduleOfAccrual" : "AnnuallyAfter6Months",
+        "hoursAccruedAnnually" : 10,
+        "unitsAccruedAnnually" : 10,
+        "typeOfUnitsToAccrue" : "Hours",
+        "openingBalanceTypeOfUnits" : "Hours",
+        "maximumToAccrue" : 80,
+        "openingBalance" : 100,
+        "rateAccruedHourly" : 3.5
+      }
     }
   },
   "required" : true
@@ -5363,7 +5623,7 @@ This allows you to safely retry requests without the risk of duplicate processin
                   <p class="marked"></p>
                   <p></p>
                   <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/openingBalances</span></code></pre>
+                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/OpeningBalances</span></code></pre>
                   <p>
                   <h3>Usage and SDK Samples</h3>
                   </p>
@@ -5702,6 +5962,18 @@ This allows you to safely retry requests without the risk of duplicate processin
     "application/json" : {
       "schema" : {
         "$ref" : "#/components/schemas/PaymentMethod"
+      },
+      "example" : {
+        "bankAccounts" : [ {
+          "accountName" : "Casual Worker",
+          "accountNumber" : "0607050201419000",
+          "sortCode" : null,
+          "particulars" : null,
+          "code" : null,
+          "dollarAmount" : null,
+          "reference" : "",
+          "calculationType" : "Balance"
+        } ]
       }
     }
   },
@@ -5879,7 +6151,209 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/SalaryAndWage"
       },
-      "example" : "{ \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"numberOfUnitsPerWeek\": 2, \"ratePerUnit\": 10, \"numberOfUnitsPerDay\": 2, \"daysPerWeek\": 1, \"effectiveFrom\": \"2020-05-01\", \"annualSalary\": 100, \"status\": \"Active\", \"paymentType\": \"Salary\" }"
+      "example" : {
+        "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+        "numberOfUnitsPerWeek" : 2,
+        "ratePerUnit" : 10,
+        "numberOfUnitsPerDay" : 2,
+        "daysPerWeek" : 1,
+        "effectiveFrom" : "2020-05-01",
+        "annualSalary" : 100,
+        "status" : "Active",
+        "paymentType" : "Salary"
+      }
+    }
+  },
+  "required" : true
+}
+</script>
+                  </table>
+                </article>
+              </div>
+              <hr>
+              <div id="api-PayrollNz-createEmployeeWorkingPattern">
+                <article id="api-PayrollNz-createEmployeeWorkingPattern-0" data-group="User" data-name="createEmployeeWorkingPattern" data-version="0">
+                  <div class="pull-left">
+                    <h1>createEmployeeWorkingPattern</h1>
+                    <p>Creates an employee working pattern</p>
+                  </div>
+                  <div class="pull-right"></div>
+                  <div class="clearfix"></div>
+                  <p></p>
+                  <p class="marked"></p>
+                  <p></p>
+                  <br />
+                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/Working-Patterns</span></code></pre>
+                  <p>
+                  <h3>Usage and SDK Samples</h3>
+                  </p>
+                  <ul class="nav nav-tabs nav-tabs-examples">
+                    <!-- *****REPLACE***** comment out the other languages <li> -->
+                    <li class=""><a href="#examples-PayrollNz-createEmployeeWorkingPattern-0-javascript">Node</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
+                    <div class="tab-pane" id="examples-PayrollNz-createEmployeeWorkingPattern-0-javascript">
+                      <pre class="prettyprint"><code class="language-javascript">await xero.setTokenSet(tokenSet);
+
+const xeroTenantId = 'xeroTenantId_example';
+const employeeID = '4ff1e5cc-9835-40d5-bb18-09fdb118db9c';
+const idempotencyKey = 'KEY_VALUE';
+const effectiveFrom = '2020-10-28'
+
+const workingWeek: WorkingWeek = { 
+  monday: 8,
+  tuesday: 8,
+  wednesday: 8,
+  thursday: 8,
+  friday: 8,
+  saturday: 0,
+  sunday: 0
+}; 
+
+try {
+  const response = await xero.accountingApi.createEmployeeWorkingPattern(xeroTenantId, employeeID, employeeWorkingPatternWithWorkingWeeksRequest, idempotencyKey);
+  console.log(response.body || response.response.statusCode)
+} catch (err) {
+  const error = JSON.stringify(err.response.body, null, 2)
+  console.log(`Status Code: ${err.response.statusCode} => ${error}`);
+}</code></pre>
+                    </div>
+                  </div>
+                  <h2>Scopes</h2>
+                  <table>
+                    
+                    <tr>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
+                    </tr>
+                    
+                  </table>
+                  <h2>Parameters</h2>
+                  <div class="methodsubtabletitle">Path parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">EmployeeID<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_createEmployeeWorkingPattern_employeeID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    UUID
+                </span>
+                    <span class="format">
+                        (uuid)
+                    </span>
+
+                    <div class="inner description marked">
+Employee id for single object
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Header parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">Xero-Tenant-Id<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_createEmployeeWorkingPattern_xeroTenantId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Xero identifier for Tenant
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                    <tr><td style="width:150px;">Idempotency-Key</td>
+<td>
+
+
+    <div id="d2e199_createEmployeeWorkingPattern_idempotencyKey">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+This allows you to safely retry requests without the risk of duplicate processing. 128 character max.
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Body parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">employeeWorkingPatternWithWorkingWeeksRequest <span style="color:red;">*</span></td>
+<td>
+<div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    EmployeeWorkingPatternWithWorkingWeeksRequest
+                </span>
+
+                    <div class="inner description marked">
+
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+<script type="application/ld+json">
+    {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/EmployeeWorkingPatternWithWorkingWeeksRequest"
+      },
+      "example" : {
+        "effectiveFrom" : "2020-01-01T00:00:00",
+        "workingWeeks" : [ {
+          "monday" : 0.0,
+          "tuesday" : 3.0,
+          "wednesday" : 0.0,
+          "thursday" : 0.0,
+          "friday" : 0.0,
+          "saturday" : 0.0,
+          "sunday" : 0.0
+        } ]
+      }
     }
   },
   "required" : true
@@ -5921,7 +6395,9 @@ const startDate = '2020-10-28'
 
 const employment: Employment = { 
   payrollCalendarID: "00000000-0000-0000-0000-000000000000",
-  startDate: startDate
+  startDate: startDate,
+  engagementType: "",
+  fixedTermEndDate: 
 }; 
 
 try {
@@ -6055,7 +6531,12 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/Employment"
       },
-      "example" : "{ \"payrollCalendarID\": \"9aa56064-990f-4ad3-a189-d966d8f6a030\", \"startDate\": \"2020-09-02\" }"
+      "example" : {
+        "payrollCalendarID" : "9aa56064-990f-4ad3-a189-d966d8f6a030",
+        "startDate" : "2020-09-02",
+        "engagementType" : "FixedTerm",
+        "fixedTermEndDate" : "2026-01-01"
+      }
     }
   },
   "required" : true
@@ -6197,7 +6678,11 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/LeaveType"
       },
-      "example" : "{ \"name\": \"My wqwhhiktun Leave\", \"isPaidLeave\": false, \"showOnPayslip\": true }"
+      "example" : {
+        "name" : "My wqwhhiktun Leave",
+        "isPaidLeave" : false,
+        "showOnPayslip" : true
+      }
     }
   },
   "required" : true
@@ -6219,7 +6704,7 @@ This allows you to safely retry requests without the risk of duplicate processin
                   <p class="marked"></p>
                   <p></p>
                   <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/paytemplateearnings</span></code></pre>
+                  <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/Employees/{EmployeeID}/PayTemplateEarnings</span></code></pre>
                   <p>
                   <h3>Usage and SDK Samples</h3>
                   </p>
@@ -6519,7 +7004,15 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/PayRun"
       },
-      "example" : "{ \"payrollCalendarID\": \"9aa56064-990f-4ad3-a189-d966d8f6a030\", \"periodStartDate\": \"2020-09-08\", \"periodEndDate\": \"2020-09-15\", \"paymentDate\": \"2020-09-20\", \"payRunStatus\": \"Draft\", \"payRunType\": \"Scheduled\", \"calendarType\": \"Weekly\" }"
+      "example" : {
+        "payrollCalendarID" : "9aa56064-990f-4ad3-a189-d966d8f6a030",
+        "periodStartDate" : "2020-09-08",
+        "periodEndDate" : "2020-09-15",
+        "paymentDate" : "2020-09-20",
+        "payRunStatus" : "Draft",
+        "payRunType" : "Scheduled",
+        "calendarType" : "Weekly"
+      }
     }
   },
   "required" : true
@@ -6663,7 +7156,12 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/PayRunCalendar"
       },
-      "example" : "{ \"name\": \"My Weekly Cal\", \"calendarType\": \"Weekly\", \"periodStartDate\": \"2020-05-01\", \"paymentDate\": \"2020-05-15\" }"
+      "example" : {
+        "name" : "My Weekly Cal",
+        "calendarType" : "Weekly",
+        "periodStartDate" : "2020-05-01",
+        "paymentDate" : "2020-05-15"
+      }
     }
   },
   "required" : true
@@ -6807,7 +7305,12 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/Reimbursement"
       },
-      "example" : "{ \"name\": \"My new Reimburse\", \"accountID\": \"fa5cdc43-643b-4ad8-b4ac-3ffe0d0f4488\", \"reimbursementCategory\": \"GSTInclusive\", \"calculationType\": \"FixedAmount\" }"
+      "example" : {
+        "name" : "My new Reimburse",
+        "accountID" : "fa5cdc43-643b-4ad8-b4ac-3ffe0d0f4488",
+        "reimbursementCategory" : "GSTInclusive",
+        "calculationType" : "FixedAmount"
+      }
     }
   },
   "required" : true
@@ -6952,7 +7455,14 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/Benefit"
       },
-      "example" : "{ \"name\": \"SidSaver\", \"category\": \"Other\", \"liabilityAccountId\": \"568f2e9a-0870-46cc-8678-f83f132ed4e3\", \"expenseAccountId\": \"e4eb36f6-97e3-4427-a394-dd4e1b355c2e\", \"CalculationTypeNZ\": \"FixedAmount\", \"standardAmount\": 10 }"
+      "example" : {
+        "name" : "SidSaver",
+        "category" : "Other",
+        "liabilityAccountId" : "568f2e9a-0870-46cc-8678-f83f132ed4e3",
+        "expenseAccountId" : "e4eb36f6-97e3-4427-a394-dd4e1b355c2e",
+        "CalculationTypeNZ" : "FixedAmount",
+        "standardAmount" : 10
+      }
     }
   },
   "required" : true
@@ -7097,7 +7607,21 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/Timesheet"
       },
-      "example" : "{ \"payrollCalendarID\": \"9aa56064-990f-4ad3-a189-d966d8f6a030\", \"employeeID\": \"68342973-c405-4b86-b5d3-d7b877c27995\", \"startDate\": \"2020-04-13\", \"endDate\": \"2020-04-19\", \"timesheetLines\": [ { \"date\": \"2020-04-13\", \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"numberOfUnits\": 8 }, { \"date\": \"2020-04-15\", \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"numberOfUnits\": 6 } ] }"
+      "example" : {
+        "payrollCalendarID" : "9aa56064-990f-4ad3-a189-d966d8f6a030",
+        "employeeID" : "68342973-c405-4b86-b5d3-d7b877c27995",
+        "startDate" : "2020-04-13",
+        "endDate" : "2020-04-19",
+        "timesheetLines" : [ {
+          "date" : "2020-04-13",
+          "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+          "numberOfUnits" : 8
+        }, {
+          "date" : "2020-04-15",
+          "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+          "numberOfUnits" : 6
+        } ]
+      }
     }
   },
   "required" : true
@@ -7276,7 +7800,11 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/TimesheetLine"
       },
-      "example" : "{ \"date\": \"2020-08-03\", \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"numberOfUnits\": 1 }"
+      "example" : {
+        "date" : "2020-08-03",
+        "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+        "numberOfUnits" : 1
+      }
     }
   },
   "required" : true
@@ -7298,7 +7826,7 @@ This allows you to safely retry requests without the risk of duplicate processin
                   <p class="marked"></p>
                   <p></p>
                   <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/Employees/{EmployeeID}/PayTemplates/earnings/{PayTemplateEarningID}</span></code></pre>
+                  <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/Employees/{EmployeeID}/PayTemplates/Earnings/{PayTemplateEarningID}</span></code></pre>
                   <p>
                   <h3>Usage and SDK Samples</h3>
                   </p>
@@ -7684,6 +8212,146 @@ Id for single salary and wages object
 
 
     <div id="d2e199_deleteEmployeeSalaryAndWage_xeroTenantId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Xero identifier for Tenant
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                </article>
+              </div>
+              <hr>
+              <div id="api-PayrollNz-deleteEmployeeWorkingPattern">
+                <article id="api-PayrollNz-deleteEmployeeWorkingPattern-0" data-group="User" data-name="deleteEmployeeWorkingPattern" data-version="0">
+                  <div class="pull-left">
+                    <h1>deleteEmployeeWorkingPattern</h1>
+                    <p>deletes employee's working patterns</p>
+                  </div>
+                  <div class="pull-right"></div>
+                  <div class="clearfix"></div>
+                  <p></p>
+                  <p class="marked"></p>
+                  <p></p>
+                  <br />
+                  <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/Employees/{EmployeeID}/Working-Patterns/{EmployeeWorkingPatternID}</span></code></pre>
+                  <p>
+                  <h3>Usage and SDK Samples</h3>
+                  </p>
+                  <ul class="nav nav-tabs nav-tabs-examples">
+                    <!-- *****REPLACE***** comment out the other languages <li> -->
+                    <li class=""><a href="#examples-PayrollNz-deleteEmployeeWorkingPattern-0-javascript">Node</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
+                    <div class="tab-pane" id="examples-PayrollNz-deleteEmployeeWorkingPattern-0-javascript">
+                      <pre class="prettyprint"><code class="language-javascript">await xero.setTokenSet(tokenSet);
+
+const xeroTenantId = 'xeroTenantId_example';
+const employeeID = '4ff1e5cc-9835-40d5-bb18-09fdb118db9c';
+const employeeWorkingPatternID = '4ff1e5cc-9835-40d5-bb18-09f3b118db9c';
+
+try {
+  const response = await xero.accountingApi.deleteEmployeeWorkingPattern(xeroTenantId, employeeID, employeeWorkingPatternID);
+  console.log(response.body || response.response.statusCode)
+} catch (err) {
+  const error = JSON.stringify(err.response.body, null, 2)
+  console.log(`Status Code: ${err.response.statusCode} => ${error}`);
+}</code></pre>
+                    </div>
+                  </div>
+                  <h2>Scopes</h2>
+                  <table>
+                    
+                    <tr>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
+                    </tr>
+                    
+                  </table>
+                  <h2>Parameters</h2>
+                  <div class="methodsubtabletitle">Path parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">EmployeeID<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_deleteEmployeeWorkingPattern_employeeID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    UUID
+                </span>
+                    <span class="format">
+                        (uuid)
+                    </span>
+
+                    <div class="inner description marked">
+Employee id for single object
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                    <tr><td style="width:150px;">EmployeeWorkingPatternID<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_deleteEmployeeWorkingPattern_employeeWorkingPatternID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    UUID
+                </span>
+                    <span class="format">
+                        (uuid)
+                    </span>
+
+                    <div class="inner description marked">
+Employee working pattern id for single object
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Header parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">Xero-Tenant-Id<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_deleteEmployeeWorkingPattern_xeroTenantId">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -9076,7 +9744,7 @@ Xero identifier for Tenant
                   <p class="marked"></p>
                   <p></p>
                   <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Employees/{EmployeeID}/openingBalances</span></code></pre>
+                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Employees/{EmployeeID}/OpeningBalances</span></code></pre>
                   <p>
                   <h3>Usage and SDK Samples</h3>
                   </p>
@@ -9805,6 +10473,269 @@ Employee id for single object
 
 
     <div id="d2e199_getEmployeeTax_xeroTenantId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Xero identifier for Tenant
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                </article>
+              </div>
+              <hr>
+              <div id="api-PayrollNz-getEmployeeWorkingPattern">
+                <article id="api-PayrollNz-getEmployeeWorkingPattern-0" data-group="User" data-name="getEmployeeWorkingPattern" data-version="0">
+                  <div class="pull-left">
+                    <h1>getEmployeeWorkingPattern</h1>
+                    <p>Retrieves employee's working patterns</p>
+                  </div>
+                  <div class="pull-right"></div>
+                  <div class="clearfix"></div>
+                  <p></p>
+                  <p class="marked"></p>
+                  <p></p>
+                  <br />
+                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Employees/{EmployeeID}/Working-Patterns/{EmployeeWorkingPatternID}</span></code></pre>
+                  <p>
+                  <h3>Usage and SDK Samples</h3>
+                  </p>
+                  <ul class="nav nav-tabs nav-tabs-examples">
+                    <!-- *****REPLACE***** comment out the other languages <li> -->
+                    <li class=""><a href="#examples-PayrollNz-getEmployeeWorkingPattern-0-javascript">Node</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
+                    <div class="tab-pane" id="examples-PayrollNz-getEmployeeWorkingPattern-0-javascript">
+                      <pre class="prettyprint"><code class="language-javascript">await xero.setTokenSet(tokenSet);
+
+const xeroTenantId = 'xeroTenantId_example';
+const employeeID = '4ff1e5cc-9835-40d5-bb18-09fdb118db9c';
+const employeeWorkingPatternID = '4ff1e5cc-9835-40d5-bb18-09f3b118db9c';
+
+try {
+  const response = await xero.accountingApi.getEmployeeWorkingPattern(xeroTenantId, employeeID, employeeWorkingPatternID);
+  console.log(response.body || response.response.statusCode)
+} catch (err) {
+  const error = JSON.stringify(err.response.body, null, 2)
+  console.log(`Status Code: ${err.response.statusCode} => ${error}`);
+}</code></pre>
+                    </div>
+                  </div>
+                  <h2>Scopes</h2>
+                  <table>
+                    
+                    <tr>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.employees.read</td>
+                      <td>Grant read-only access to payroll employees</td>
+                    </tr>
+                    
+                  </table>
+                  <h2>Parameters</h2>
+                  <div class="methodsubtabletitle">Path parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">EmployeeID<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getEmployeeWorkingPattern_employeeID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    UUID
+                </span>
+                    <span class="format">
+                        (uuid)
+                    </span>
+
+                    <div class="inner description marked">
+Employee id for single object
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                    <tr><td style="width:150px;">EmployeeWorkingPatternID<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getEmployeeWorkingPattern_employeeWorkingPatternID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    UUID
+                </span>
+                    <span class="format">
+                        (uuid)
+                    </span>
+
+                    <div class="inner description marked">
+Employee working pattern id for single object
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Header parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">Xero-Tenant-Id<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getEmployeeWorkingPattern_xeroTenantId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Xero identifier for Tenant
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                </article>
+              </div>
+              <hr>
+              <div id="api-PayrollNz-getEmployeeWorkingPatterns">
+                <article id="api-PayrollNz-getEmployeeWorkingPatterns-0" data-group="User" data-name="getEmployeeWorkingPatterns" data-version="0">
+                  <div class="pull-left">
+                    <h1>getEmployeeWorkingPatterns</h1>
+                    <p>Retrieves employee's working patterns</p>
+                  </div>
+                  <div class="pull-right"></div>
+                  <div class="clearfix"></div>
+                  <p></p>
+                  <p class="marked"></p>
+                  <p></p>
+                  <br />
+                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Employees/{EmployeeID}/Working-Patterns</span></code></pre>
+                  <p>
+                  <h3>Usage and SDK Samples</h3>
+                  </p>
+                  <ul class="nav nav-tabs nav-tabs-examples">
+                    <!-- *****REPLACE***** comment out the other languages <li> -->
+                    <li class=""><a href="#examples-PayrollNz-getEmployeeWorkingPatterns-0-javascript">Node</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
+                    <div class="tab-pane" id="examples-PayrollNz-getEmployeeWorkingPatterns-0-javascript">
+                      <pre class="prettyprint"><code class="language-javascript">await xero.setTokenSet(tokenSet);
+
+const xeroTenantId = 'xeroTenantId_example';
+const employeeID = '4ff1e5cc-9835-40d5-bb18-09fdb118db9c';
+
+try {
+  const response = await xero.accountingApi.getEmployeeWorkingPatterns(xeroTenantId, employeeID);
+  console.log(response.body || response.response.statusCode)
+} catch (err) {
+  const error = JSON.stringify(err.response.body, null, 2)
+  console.log(`Status Code: ${err.response.statusCode} => ${error}`);
+}</code></pre>
+                    </div>
+                  </div>
+                  <h2>Scopes</h2>
+                  <table>
+                    
+                    <tr>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.employees.read</td>
+                      <td>Grant read-only access to payroll employees</td>
+                    </tr>
+                    
+                  </table>
+                  <h2>Parameters</h2>
+                  <div class="methodsubtabletitle">Path parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">EmployeeID<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getEmployeeWorkingPatterns_employeeID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    UUID
+                </span>
+                    <span class="format">
+                        (uuid)
+                    </span>
+
+                    <div class="inner description marked">
+Employee id for single object
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Header parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">Xero-Tenant-Id<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getEmployeeWorkingPatterns_xeroTenantId">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -12451,7 +13382,20 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/Employee"
       },
-      "example" : "{ \"title\": \"Mr\", \"firstName\": \"Tony\", \"lastName\": \"Starkgtrzgquusrson\", \"dateOfBirth\": \"1999-01-01\", \"address\": { \"addressLine1\": \"101 Green St\", \"city\": \"San Francisco\", \"postCode\": \"4432\", \"countryName\": \"United Kingdom\" }, \"email\": \"58315@starkindustries.com\", \"gender\": \"M\" }"
+      "example" : {
+        "title" : "Mr",
+        "firstName" : "Tony",
+        "lastName" : "Starkgtrzgquusrson",
+        "dateOfBirth" : "1999-01-01",
+        "address" : {
+          "addressLine1" : "101 Green St",
+          "city" : "San Francisco",
+          "postCode" : "4432",
+          "countryName" : "United Kingdom"
+        },
+        "email" : "58315@starkindustries.com",
+        "gender" : "M"
+      }
     }
   },
   "required" : true
@@ -12473,7 +13417,7 @@ This allows you to safely retry requests without the risk of duplicate processin
                   <p class="marked"></p>
                   <p></p>
                   <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/Employees/{EmployeeID}/PayTemplates/earnings/{PayTemplateEarningID}</span></code></pre>
+                  <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/Employees/{EmployeeID}/PayTemplates/Earnings/{PayTemplateEarningID}</span></code></pre>
                   <p>
                   <h3>Usage and SDK Samples</h3>
                   </p>
@@ -12659,7 +13603,11 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/EarningsTemplate"
       },
-      "example" : "{ \"ratePerUnit\": 25, \"numberOfUnits\": 4, \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\" }"
+      "example" : {
+        "ratePerUnit" : 25,
+        "numberOfUnits" : 4,
+        "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5"
+      }
     }
   },
   "required" : true
@@ -12864,7 +13812,18 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/EmployeeLeave"
       },
-      "example" : "{ \"leaveTypeID\": \"b0b1b79e-2a25-46c2-ad08-ca25ef48d7e4\", \"description\": \"Creating a Description\", \"startDate\": \"2020-04-24\", \"endDate\": \"2020-04-26\", \"periods\": [ { \"periodStartDate\": \"2020-04-20\", \"periodEndDate\": \"2020-04-26\", \"numberOfUnits\": 1, \"periodStatus\": \"Approved\" } ] }"
+      "example" : {
+        "leaveTypeID" : "b0b1b79e-2a25-46c2-ad08-ca25ef48d7e4",
+        "description" : "Creating a Description",
+        "startDate" : "2020-04-24",
+        "endDate" : "2020-04-26",
+        "periods" : [ {
+          "periodStartDate" : "2020-04-20",
+          "periodEndDate" : "2020-04-26",
+          "numberOfUnits" : 1,
+          "periodStatus" : "Approved"
+        } ]
+      }
     }
   },
   "required" : true
@@ -13068,7 +14027,17 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/SalaryAndWage"
       },
-      "example" : "{ \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"numberOfUnitsPerWeek\": 3, \"ratePerUnit\": 11, \"numberOfUnitsPerDay\": 3, \"daysPerWeek\": 1, \"effectiveFrom\": \"2020-05-15\", \"annualSalary\": 101, \"status\": \"Active\", \"paymentType\": \"Salary\" }"
+      "example" : {
+        "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+        "numberOfUnitsPerWeek" : 3,
+        "ratePerUnit" : 11,
+        "numberOfUnitsPerDay" : 3,
+        "daysPerWeek" : 1,
+        "effectiveFrom" : "2020-05-15",
+        "annualSalary" : 101,
+        "status" : "Active",
+        "paymentType" : "Salary"
+      }
     }
   },
   "required" : true
@@ -13253,6 +14222,24 @@ This allows you to safely retry requests without the risk of duplicate processin
     "application/json" : {
       "schema" : {
         "$ref" : "#/components/schemas/EmployeeTax"
+      },
+      "example" : {
+        "irdNumber" : "111111111",
+        "taxCode" : "M",
+        "esctRatePercentage" : 17.5,
+        "isEligibleForKiwiSaver" : true,
+        "hasSpecialStudentLoanRate" : false,
+        "specialStudentLoanRatePercentage" : null,
+        "specialTaxRatePercentage" : null,
+        "kiwiSaverContributions" : "MakeContributions",
+        "kiwiSaverOptOutDate" : null,
+        "kiwiSaverContributionHolidayEndDate" : null,
+        "kiwiSaverEmployeeContributionRatePercentage" : 3,
+        "kiwiSaverEmployerContributionRatePercentage" : 3,
+        "kiwiSaverEmployerSalarySacrificeContributionRatePercentage" : 0,
+        "hasStudentLoanBalance" : false,
+        "studentLoanBalance" : null,
+        "studentLoanAsAt" : null
       }
     }
   },
@@ -13431,7 +14418,9 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/PayRun"
       },
-      "example" : "{ \"paymentDate\": \"2019-07-01\" }"
+      "example" : {
+        "paymentDate" : "2019-07-01"
+      }
     }
   },
   "required" : true
@@ -13616,7 +14605,81 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/PaySlip"
       },
-      "example" : "{ \"earningsLines\": [ { \"earningsLineID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"displayName\": \"Ordinary Time\", \"ratePerUnit\": 25, \"numberOfUnits\": 0, \"amount\": 0, \"isLinkedToTimesheet\": false, \"isSystemGenerated\": true }, { \"earningsLineID\": \"65b83d94-f20f-45e1-85ae-387fcf460c26\", \"earningsRateID\": \"65b83d94-f20f-45e1-85ae-387fcf460c26\", \"displayName\": \"Salary\", \"ratePerUnit\": 0, \"numberOfUnits\": 8, \"amount\": 0, \"isLinkedToTimesheet\": false, \"isSystemGenerated\": false } ], \"leaveEarningsLines\": [ { \"earningsLineID\": \"0441497f-5dc7-4cd3-a90d-f2e07e21b2a6\", \"earningsRateID\": \"39b3560a-5d2f-4538-924a-4349dc86396e\", \"displayName\": \"Holiday Pay\", \"fixedAmount\": 268.8, \"amount\": 268.8, \"isLinkedToTimesheet\": false, \"isSystemGenerated\": true } ], \"deductionLines\": [ { \"deductionTypeID\": \"a3760fe4-68a4-4e38-8326-fe616af7dc74\", \"amount\": 100 } ], \"leaveAccrualLines\": [ { \"leaveTypeID\": \"0441497f-5dc7-4cd3-a90d-f2e07e21b2a6\", \"numberOfUnits\": 268.8 }, { \"leaveTypeID\": \"b0b1b79e-2a25-46c2-ad08-ca25ef48d7e4\", \"numberOfUnits\": 0 }, { \"leaveTypeID\": \"f2f994cf-1899-46f3-ad4f-5d92d78c3719\", \"numberOfUnits\": 0 }, { \"leaveTypeID\": \"34129765-11cb-4d8c-b568-84a2219beda3\", \"numberOfUnits\": 0 } ], \"superannuationLines\": [ { \"superannuationTypeID\": \"563273ea-0dae-4f82-86a4-e0db77c008ea\", \"displayName\": \"KiwiSaver\", \"amount\": 108.86, \"fixedAmount\": 3, \"percentage\": 3, \"manualAdjustment\": false } ], \"employeeTaxLines\": [ { \"taxLineID\": \"1084146b-e890-489c-aed3-06de80f63d84\", \"amount\": 1057.22, \"globalTaxTypeID\": \"11\", \"manualAdjustment\": false } ], \"employerTaxLines\": [ { \"taxLineID\": \"6f9eb8cd-0f4a-440b-939c-bdb0f6ad694c\", \"amount\": 18.9, \"globalTaxTypeID\": \"10\", \"manualAdjustment\": false } ], \"statutoryDeductionLines\": [ { \"statutoryDeductionTypeID\": \"b5efd8d1-0c93-4a14-a314-b5cba4a4e6b3\", \"amount\": 108.86 } ], \"grossEarningsHistory\": { \"daysPaid\": 3, \"unpaidWeeks\": 0 } }"
+      "example" : {
+        "earningsLines" : [ {
+          "earningsLineID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+          "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+          "displayName" : "Ordinary Time",
+          "ratePerUnit" : 25,
+          "numberOfUnits" : 0,
+          "amount" : 0,
+          "isLinkedToTimesheet" : false,
+          "isSystemGenerated" : true
+        }, {
+          "earningsLineID" : "65b83d94-f20f-45e1-85ae-387fcf460c26",
+          "earningsRateID" : "65b83d94-f20f-45e1-85ae-387fcf460c26",
+          "displayName" : "Salary",
+          "ratePerUnit" : 0,
+          "numberOfUnits" : 8,
+          "amount" : 0,
+          "isLinkedToTimesheet" : false,
+          "isSystemGenerated" : false
+        } ],
+        "leaveEarningsLines" : [ {
+          "earningsLineID" : "0441497f-5dc7-4cd3-a90d-f2e07e21b2a6",
+          "earningsRateID" : "39b3560a-5d2f-4538-924a-4349dc86396e",
+          "displayName" : "Holiday Pay",
+          "fixedAmount" : 268.8,
+          "amount" : 268.8,
+          "isLinkedToTimesheet" : false,
+          "isSystemGenerated" : true
+        } ],
+        "deductionLines" : [ {
+          "deductionTypeID" : "a3760fe4-68a4-4e38-8326-fe616af7dc74",
+          "amount" : 100
+        } ],
+        "leaveAccrualLines" : [ {
+          "leaveTypeID" : "0441497f-5dc7-4cd3-a90d-f2e07e21b2a6",
+          "numberOfUnits" : 268.8
+        }, {
+          "leaveTypeID" : "b0b1b79e-2a25-46c2-ad08-ca25ef48d7e4",
+          "numberOfUnits" : 0
+        }, {
+          "leaveTypeID" : "f2f994cf-1899-46f3-ad4f-5d92d78c3719",
+          "numberOfUnits" : 0
+        }, {
+          "leaveTypeID" : "34129765-11cb-4d8c-b568-84a2219beda3",
+          "numberOfUnits" : 0
+        } ],
+        "superannuationLines" : [ {
+          "superannuationTypeID" : "563273ea-0dae-4f82-86a4-e0db77c008ea",
+          "displayName" : "KiwiSaver",
+          "amount" : 108.86,
+          "fixedAmount" : 3,
+          "percentage" : 3,
+          "manualAdjustment" : false
+        } ],
+        "employeeTaxLines" : [ {
+          "taxLineID" : "1084146b-e890-489c-aed3-06de80f63d84",
+          "amount" : 1057.22,
+          "globalTaxTypeID" : "11",
+          "manualAdjustment" : false
+        } ],
+        "employerTaxLines" : [ {
+          "taxLineID" : "6f9eb8cd-0f4a-440b-939c-bdb0f6ad694c",
+          "amount" : 18.9,
+          "globalTaxTypeID" : "10",
+          "manualAdjustment" : false
+        } ],
+        "statutoryDeductionLines" : [ {
+          "statutoryDeductionTypeID" : "b5efd8d1-0c93-4a14-a314-b5cba4a4e6b3",
+          "amount" : 108.86
+        } ],
+        "grossEarningsHistory" : {
+          "daysPaid" : 3,
+          "unpaidWeeks" : 0
+        }
+      }
     }
   },
   "required" : true
@@ -13822,7 +14885,11 @@ This allows you to safely retry requests without the risk of duplicate processin
       "schema" : {
         "$ref" : "#/components/schemas/TimesheetLine"
       },
-      "example" : "{ \"date\": \"2020-08-04\", \"earningsRateID\": \"f9d8f5b5-9049-47f4-8541-35e200f750a5\", \"numberOfUnits\": 2 }"
+      "example" : {
+        "date" : "2020-08-04",
+        "earningsRateID" : "f9d8f5b5-9049-47f4-8541-35e200f750a5",
+        "numberOfUnits" : 2
+      }
     }
   },
   "required" : true

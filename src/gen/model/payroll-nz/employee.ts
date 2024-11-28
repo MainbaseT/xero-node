@@ -12,16 +12,16 @@ export class Employee {
     /**
     * First name of employee
     */
-    'firstName'?: string;
+    'firstName': string;
     /**
     * Last name of employee
     */
-    'lastName'?: string;
+    'lastName': string;
     /**
     * Date of birth of the employee (YYYY-MM-DD)
     */
-    'dateOfBirth'?: string;
-    'address'?: Address;
+    'dateOfBirth': string;
+    'address': Address;
     /**
     * The email address for the employee
     */
@@ -58,6 +58,14 @@ export class Employee {
     * Employee\'s job title
     */
     'jobTitle'?: string;
+    /**
+    * Engagement type of the employee
+    */
+    'engagementType'?: string;
+    /**
+    * End date for an employee with a fixed-term engagement type
+    */
+    'fixedTermEndDate'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -135,6 +143,16 @@ export class Employee {
         {
             "name": "jobTitle",
             "baseName": "jobTitle",
+            "type": "string"
+        },
+        {
+            "name": "engagementType",
+            "baseName": "engagementType",
+            "type": "string"
+        },
+        {
+            "name": "fixedTermEndDate",
+            "baseName": "fixedTermEndDate",
             "type": "string"
         }    ];
 

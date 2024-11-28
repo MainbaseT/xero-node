@@ -1,6 +1,7 @@
 import { Allocation } from '././allocation';
 import { Contact } from '././contact';
 import { CurrencyCode } from '././currencyCode';
+import { InvoiceAddress } from '././invoiceAddress';
 import { LineAmountTypes } from '././lineAmountTypes';
 import { LineItem } from '././lineItem';
 import { Payment } from '././payment';
@@ -71,7 +72,7 @@ export class CreditNote {
     */
     'reference'?: string;
     /**
-    * boolean to indicate if a credit note has been sent to a contact via  the Xero app (currently read only)
+    * Boolean to set whether the credit note in the Xero app should be marked as “sent”. This can be set only on credit notes that have been approved
     */
     'sentToContact'?: boolean;
     /**
@@ -118,6 +119,10 @@ export class CreditNote {
     * Displays array of warning messages from the API
     */
     'warnings'?: Array<ValidationError>;
+    /**
+    * An array of addresses used to auto calculate sales tax
+    */
+    'invoiceAddresses'?: Array<InvoiceAddress>;
 
     static discriminator: string | undefined = undefined;
 
@@ -271,6 +276,11 @@ export class CreditNote {
             "name": "warnings",
             "baseName": "Warnings",
             "type": "Array<ValidationError>"
+        },
+        {
+            "name": "invoiceAddresses",
+            "baseName": "InvoiceAddresses",
+            "type": "Array<InvoiceAddress>"
         }    ];
 
     static getAttributeTypeMap() {

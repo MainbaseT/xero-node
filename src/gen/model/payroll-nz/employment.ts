@@ -3,7 +3,7 @@ export class Employment {
     /**
     * Xero unique identifier for the payroll calendar of the employee
     */
-    'payrollCalendarID'?: string;
+    'payrollCalendarID': string;
     /**
     * Xero unique identifier for the payrun calendar for the employee (Deprecated in version 1.1.6)
     */
@@ -11,7 +11,15 @@ export class Employment {
     /**
     * Start date of the employment (YYYY-MM-DD)
     */
-    'startDate'?: string;
+    'startDate': string;
+    /**
+    * Engagement type of the employee
+    */
+    'engagementType': string;
+    /**
+    * End date for an employee with a fixed-term engagement type
+    */
+    'fixedTermEndDate'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -29,6 +37,16 @@ export class Employment {
         {
             "name": "startDate",
             "baseName": "startDate",
+            "type": "string"
+        },
+        {
+            "name": "engagementType",
+            "baseName": "engagementType",
+            "type": "string"
+        },
+        {
+            "name": "fixedTermEndDate",
+            "baseName": "fixedTermEndDate",
             "type": "string"
         }    ];
 
