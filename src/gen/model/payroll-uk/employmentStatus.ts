@@ -5,5 +5,6 @@
 export enum EmploymentStatus {
     Employee = <any> 'Employee',
     Worker = <any> 'Worker',
-    Unspecified = <any> 'Unspecified'
+    Unspecified = <any> 'Unspecified',
+    OffPayrollWorker = <any> 'OffPayrollWorker'
 }
